@@ -10,7 +10,8 @@
 
 html,
 body,
-#root {
+#root,
+main {
   height: 100%;
 }
 
@@ -30,4 +31,120 @@ button {
   font: inherit;
   color: inherit;
   min-height: var(--tap-min);
+}
+
+/* Layout */
+.screen {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  min-height: 100%;
+}
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  list-style: none;
+}
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.dim {
+  color: var(--text-dim);
+}
+.notice {
+  color: var(--accent);
+}
+.rules {
+  list-style: decimal;
+  padding-inline-start: var(--space-3);
+}
+.rules li {
+  margin-block-end: var(--space-1);
+}
+
+/* Controls */
+.btn {
+  border: 0;
+  border-radius: var(--radius);
+  padding-block: var(--space-2);
+  padding-inline: var(--space-3);
+  background: var(--accent);
+  color: var(--accent-text);
+  font-weight: 700;
+}
+.btn:disabled {
+  opacity: 0.45;
+}
+.btn--ghost {
+  background: var(--surface-raised);
+  color: var(--text);
+}
+.btn--danger {
+  background: var(--danger);
+  color: var(--accent-text);
+}
+
+input[type="text"],
+input:not([type]) {
+  flex: 1;
+  min-height: var(--tap-min);
+  border-radius: var(--radius);
+  border: 2px solid var(--surface-raised);
+  background: var(--surface);
+  color: var(--text);
+  padding-inline: var(--space-2);
+}
+input[type="checkbox"],
+input[type="radio"] {
+  width: 28px;
+  height: 28px;
+  accent-color: var(--accent);
+}
+fieldset {
+  border: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+legend {
+  font-weight: 700;
+  margin-block-end: var(--space-1);
+}
+
+/* Round */
+.screen--home,
+.screen--handoff,
+.screen--reveal {
+  justify-content: center;
+  text-align: center;
+}
+.word {
+  font-size: var(--step-4);
+  line-height: 1.1;
+}
+.card {
+  background: var(--surface-raised);
+  border-radius: var(--radius);
+  padding: var(--space-4) var(--space-3);
+  text-align: center;
+}
+.card--impostor {
+  background: var(--danger);
+}
+.hold {
+  width: 100%;
+  min-height: 45vh;
+  border: 3px dashed var(--surface-raised);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text-dim);
+  font-size: var(--step-1);
+}
+.timer {
+  font-size: var(--step-3);
+  font-variant-numeric: tabular-nums;
 }
