@@ -231,16 +231,22 @@ describe either, and far enough apart that a careful listener eventually
 notices.**
 
 - Good: `كسكسي / مقرونة` · `الطاكسي / اللواج` · `الترجي / النادي الإفريقي` ·
-  `بريك / فريكاسي` · `صفاقس / سوسة` · `القهوة / التاي`
+  `بريك / فريكاسي` · `صفاقس / سوسة` · `القهوة / التاي` · `مزود / مالوف` ·
+  `دربوكة / بندير`
 - Too far: `كسكسي / طيّارة` — البراني is caught on the first hint. Round over.
 - Too close: `قهوة / قهوة بالحليب` — nobody can ever tell, which is equally
   boring.
 
 ### Launch packs
 
-عايلي tier, eight packs at roughly 30 pairs each:
+عايلي tier, nine packs at roughly 30 pairs each:
 ماكلة · بلايص · تلفزة و سينما · كرة القدم · مدرسة و باك · رمضان و أعياد ·
-حيوانات · حوايج الدار
+حيوانات · حوايج الدار · **موسيقى و مزود**
+
+The موسيقى و مزود pack covers genres, instruments, artists and classic tracks —
+مزود، مالوف، ستامبالي، راب تونسي، دربوكة، بندير، زكرة. It sits in the عايلي
+tier because genre, instrument and artist names are entirely family-safe; any
+risqué song title belongs in the بين الأصحاب tier instead.
 
 بين الأصحاب tier, two packs behind the unlock: سلاڨ و عبارات · حياة الحومة.
 Cheeky, not vulgar.
