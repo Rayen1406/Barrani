@@ -1,0 +1,33 @@
+@import "@fontsource/cairo/arabic-400.css";
+@import "@fontsource/cairo/arabic-700.css";
+@import "./tokens.css";
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Cairo", system-ui, sans-serif;
+  font-size: var(--step-0);
+  line-height: 1.5;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  min-height: var(--tap-min);
+}

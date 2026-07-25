@@ -1,0 +1,25 @@
+:root {
+  --bg: #12100e;
+  --surface: #1f1c19;
+  --surface-raised: #2b2723;
+  --text: #f7f3ec;
+  --text-dim: #a8a09a;
+  --accent: #e0562f;
+  --accent-text: #ffffff;
+  --danger: #c0392b;
+  --ok: #2e9e63;
+
+  --step-0: 1.125rem;
+  --step-1: 1.5rem;
+  --step-2: 2rem;
+  --step-3: 2.75rem;
+  --step-4: 4rem;
+
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2.5rem;
+
+  --radius: 1rem;
+  --tap-min: 56px;
+}
