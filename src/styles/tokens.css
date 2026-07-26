@@ -1,13 +1,19 @@
 :root {
-  --bg: #12100e;
-  --surface: #1f1c19;
-  --surface-raised: #2b2723;
-  --text: #f7f3ec;
-  --text-dim: #a8a09a;
-  --accent: #e0562f;
-  --accent-text: #ffffff;
-  --danger: #c0392b;
-  --ok: #2e9e63;
+  /* Regal Navy base — cream text on it clears 10:1, which is what keeps the
+     phone readable at arm's length on a sunny terrace. */
+  --bg: #0d3b66;
+  --surface: #10457a;
+  --surface-raised: #17528d;
+  --border: #2c6699;
+
+  --text: #faf0ca; /* Lemon Chiffon */
+  --text-dim: #d5c9a5;
+
+  --accent: #f4d35e; /* Royal Gold */
+  --accent-text: #0d3b66;
+
+  --secondary: #ee964b; /* Sandy Brown */
+  --danger: #f95738; /* Tomato */
 
   --step-0: 1.125rem;
   --step-1: 1.5rem;
@@ -20,6 +26,6 @@
   --space-3: 1.5rem;
   --space-4: 2.5rem;
 
-  --radius: 1rem;
+  --radius: 1.25rem;
   --tap-min: 56px;
 }

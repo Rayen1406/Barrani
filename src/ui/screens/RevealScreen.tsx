@@ -25,7 +25,9 @@ export function RevealScreen({ index }: { index: number }) {
             <h2 className="word">{assignment.word}</h2>
           </Card>
         )}
-        <Button onClick={() => dispatch({ type: "nextPlayer" })}>{strings.next}</Button>
+        <Button variant="ghost" onClick={() => dispatch({ type: "nextPlayer" })}>
+          {strings.next}
+        </Button>
       </HoldToReveal>
     </section>
   );

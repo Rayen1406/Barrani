@@ -17,6 +17,10 @@ main {
 
 body {
   background: var(--bg);
+  background-image:
+    radial-gradient(circle at 15% 0%, rgba(244, 211, 94, 0.16), transparent 45%),
+    radial-gradient(circle at 85% 100%, rgba(249, 87, 56, 0.14), transparent 45%);
+  background-attachment: fixed;
   color: var(--text);
   font-family: "Cairo", system-ui, sans-serif;
   font-size: var(--step-0);
@@ -31,6 +35,15 @@ button {
   font: inherit;
   color: inherit;
   min-height: var(--tap-min);
+}
+
+h1 {
+  font-size: var(--step-3);
+  color: var(--accent);
+  letter-spacing: -0.02em;
+}
+h2 {
+  font-size: var(--step-2);
 }
 
 /* Layout */
@@ -56,14 +69,15 @@ button {
   color: var(--text-dim);
 }
 .notice {
-  color: var(--accent);
+  color: var(--secondary);
+  font-weight: 700;
 }
 .rules {
   list-style: decimal;
   padding-inline-start: var(--space-3);
 }
 .rules li {
-  margin-block-end: var(--space-1);
+  margin-block-end: var(--space-2);
 }
 
 /* Controls */
@@ -75,9 +89,18 @@ button {
   background: var(--accent);
   color: var(--accent-text);
   font-weight: 700;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.25);
+  transition:
+    transform 0.06s ease,
+    box-shadow 0.06s ease;
+}
+.btn:active:not(:disabled) {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);
 }
 .btn:disabled {
-  opacity: 0.45;
+  opacity: 0.4;
+  box-shadow: none;
 }
 .btn--ghost {
   background: var(--surface-raised);
@@ -85,7 +108,7 @@ button {
 }
 .btn--danger {
   background: var(--danger);
-  color: var(--accent-text);
+  color: var(--text);
 }
 
 input[type="text"],
@@ -93,16 +116,22 @@ input:not([type]) {
   flex: 1;
   min-height: var(--tap-min);
   border-radius: var(--radius);
-  border: 2px solid var(--surface-raised);
+  border: 2px solid var(--border);
   background: var(--surface);
   color: var(--text);
   padding-inline: var(--space-2);
+}
+input[type="text"]::placeholder,
+input:not([type])::placeholder {
+  color: var(--text-dim);
+  opacity: 0.7;
 }
 input[type="checkbox"],
 input[type="radio"] {
   width: 28px;
   height: 28px;
   accent-color: var(--accent);
+  flex: none;
 }
 fieldset {
   border: 0;
@@ -112,13 +141,30 @@ fieldset {
 }
 legend {
   font-weight: 700;
+  color: var(--accent);
   margin-block-end: var(--space-1);
+}
+
+/* Lists */
+.screen--scoreboard li,
+.screen--players li {
+  justify-content: space-between;
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: var(--space-2) var(--space-3);
+}
+.screen--scoreboard strong {
+  font-size: var(--step-1);
+  color: var(--accent);
 }
 
 /* Round */
 .screen--home,
 .screen--handoff,
-.screen--reveal {
+.screen--reveal,
+.screen--hints,
+.screen--discussion,
+.screen--resolution {
   justify-content: center;
   text-align: center;
 }
@@ -127,24 +173,57 @@ legend {
   line-height: 1.1;
 }
 .card {
-  background: var(--surface-raised);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  background: var(--accent);
+  color: var(--accent-text);
   border-radius: var(--radius);
   padding: var(--space-4) var(--space-3);
   text-align: center;
+  box-shadow: 0 8px 0 rgba(0, 0, 0, 0.25);
+}
+.card .dim {
+  color: rgba(13, 59, 102, 0.7);
 }
 .card--impostor {
   background: var(--danger);
+  color: var(--text);
+}
+.card--impostor .dim {
+  color: rgba(250, 240, 202, 0.85);
 }
 .hold {
   width: 100%;
   min-height: 45vh;
-  border: 3px dashed var(--surface-raised);
+  border: 3px dashed var(--border);
   border-radius: var(--radius);
   background: var(--surface);
   color: var(--text-dim);
   font-size: var(--step-1);
+  font-weight: 700;
 }
+.hold:active {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.verdict {
+  font-size: var(--step-3);
+  line-height: 1.15;
+}
+.verdict--caught {
+  color: var(--accent);
+}
+.verdict--missed {
+  color: var(--danger);
+}
+.screen--resolution h3 {
+  font-size: var(--step-2);
+}
+
 .timer {
   font-size: var(--step-3);
+  font-weight: 700;
+  color: var(--accent);
   font-variant-numeric: tabular-nums;
 }

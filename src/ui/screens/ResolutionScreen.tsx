@@ -23,7 +23,7 @@ export function ResolutionScreen({ accused, accusedWasImpostor, stealBackPending
   if (stealBackPending) {
     return (
       <section className="screen screen--resolution">
-        <h2>{strings.caught}</h2>
+        <h2 className="verdict verdict--caught">{strings.caught}</h2>
         <p>{accusedPlayer?.name}</p>
         <p className="dim">{strings.stealBackPrompt}</p>
         <div className="stack">
@@ -43,7 +43,9 @@ export function ResolutionScreen({ accused, accusedWasImpostor, stealBackPending
 
   return (
     <section className="screen screen--resolution">
-      <h2>{accusedWasImpostor ? strings.caught : strings.missed}</h2>
+      <h2 className={accusedWasImpostor ? "verdict verdict--caught" : "verdict verdict--missed"}>
+        {accusedWasImpostor ? strings.caught : strings.missed}
+      </h2>
       <p className="dim">{strings.barraniWas}</p>
       <h3>{impostorNames}</h3>
       <p className="dim">

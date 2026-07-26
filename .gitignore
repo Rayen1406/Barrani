@@ -3,3 +3,4 @@ dist
 android
 .DS_Store
 *.keystore
+.claude
