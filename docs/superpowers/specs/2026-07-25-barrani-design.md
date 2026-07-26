@@ -99,6 +99,23 @@ the question either — inventing the trick question is the skill the game is
 actually testing. The talking, accusing and laughing stays entirely off-app. The
 app is a dealer and a referee, nothing more.
 
+### البراني may stop the round and guess
+
+At any point during questioning or discussion, anyone may tap **البرّاني يحبّ
+يحزر**. The app then asks *who* is declaring, and the table taps that player.
+
+- **Declarer is البراني and names the word** → +3. Beating a vote outright is
+  worth more than merely surviving one, so a bold correct guess pays best.
+- **Declarer is البراني and gets it wrong** → the innocents take the round, +1
+  each.
+- **Declarer is not البراني** → the impostors win the round, +2 each.
+
+That last rule is load-bearing, not flavour. Without it an innocent could tap
+the button purely to force the app into revealing who البراني is. Making a false
+declaration lose the round means only البراني ever has a reason to press it.
+
+The app never reveals البراني before the declaration is resolved.
+
 ### Vote and resolution
 
 **One vote per round, regardless of impostor count.** The host taps whoever the
@@ -122,6 +139,9 @@ Deliberately dumb. Per round:
 - Innocents: **+1 each** if the player voted out was an impostor.
 - Each impostor: **+2** if no impostor was caught.
 - The caught impostor: **+1** if their steal-back guess was correct.
+- A declaring البراني who names the word: **+3**, and nobody else scores.
+- A declaring البراني who gets it wrong: innocents **+1 each**.
+- A false declaration by an innocent: each impostor **+2**.
 
 Running scoreboard for the current session only — no lifetime stats, no
 profiles.

@@ -1,10 +1,10 @@
 import { allPacks } from "../content";
 import { buildPool, recyclePool } from "../engine/pairPool";
 import { createRng } from "../engine/rng";
-import { MAX_PLAYERS, MIN_PLAYERS } from "../engine/roles";
+import { isImpostor, MAX_PLAYERS, MIN_PLAYERS } from "../engine/roles";
 import { canStart, createRound, maxImpostorCount, resolveVariant } from "../engine/round";
 import { applyDelta, scoreRound } from "../engine/scoring";
-import type { PlayerId } from "../engine/types";
+import type { PlayerId, RoundOutcome } from "../engine/types";
 import type { PersistedSettings } from "../persist/schema";
 import type { Action, Phase, Player, Session } from "./types";
 
@@ -177,37 +177,62 @@ export function reducer(session: Session, action: Action): Session {
       if (phase.name !== "discussion") return session;
       return { ...session, phase: { name: "vote" } };
 
-    case "castVote": {
-      if (phase.name !== "vote" || !session.round) return session;
-      const accusedWasImpostor = session.round.assignments.some(
-        (a) => a.playerId === action.accused && a.isImpostor,
-      );
+    case "openDeclare":
+      if (phase.name !== "discussion" && phase.name !== "questions") return session;
+      return { ...session, phase: { name: "declare" } };
+
+    case "cancelDeclare":
+      if (phase.name !== "declare") return session;
+      return { ...session, phase: { name: "discussion" } };
+
+    case "declareGuess": {
+      if (phase.name !== "declare" || !session.round) return session;
+      const declarerWasImpostor = isImpostor(session.round, action.declarer);
       return {
         ...session,
         phase: {
           name: "resolution",
-          accused: action.accused,
-          accusedWasImpostor,
-          stealBackPending: accusedWasImpostor,
-          stealBackCorrect: false,
+          outcome: {
+            kind: "declare",
+            declarer: action.declarer,
+            declarerWasImpostor,
+            guessCorrect: false,
+          },
+          pending: declarerWasImpostor,
         },
       };
     }
 
-    case "resolveStealBack":
-      if (phase.name !== "resolution" || !phase.stealBackPending) return session;
+    case "castVote": {
+      if (phase.name !== "vote" || !session.round) return session;
+      const accusedWasImpostor = isImpostor(session.round, action.accused);
       return {
         ...session,
-        phase: { ...phase, stealBackPending: false, stealBackCorrect: action.correct },
+        phase: {
+          name: "resolution",
+          outcome: {
+            kind: "vote",
+            accused: action.accused,
+            accusedWasImpostor,
+            stealBackCorrect: false,
+          },
+          pending: accusedWasImpostor,
+        },
       };
+    }
+
+    case "resolveGuess": {
+      if (phase.name !== "resolution" || !phase.pending) return session;
+      const outcome: RoundOutcome =
+        phase.outcome.kind === "vote"
+          ? { ...phase.outcome, stealBackCorrect: action.correct }
+          : { ...phase.outcome, guessCorrect: action.correct };
+      return { ...session, phase: { ...phase, outcome, pending: false } };
+    }
 
     case "finishRound": {
-      if (phase.name !== "resolution" || phase.stealBackPending || !session.round) return session;
-      const delta = scoreRound(session.round, {
-        accused: phase.accused,
-        accusedWasImpostor: phase.accusedWasImpostor,
-        stealBackCorrect: phase.stealBackCorrect,
-      });
+      if (phase.name !== "resolution" || phase.pending || !session.round) return session;
+      const delta = scoreRound(session.round, phase.outcome);
       return {
         ...session,
         scores: applyDelta(session.scores, delta),

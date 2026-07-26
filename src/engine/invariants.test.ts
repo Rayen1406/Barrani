@@ -9,7 +9,8 @@ import type { RoundConfig, Variant } from "./types";
 const VARIANTS: Variant[] = ["barrani", "chbih"];
 const ITERATIONS = 10_000;
 
-test("round invariants hold across ten thousand rounds", () => {
+// Deliberately heavy: ten thousand rounds × six scoring outcomes each.
+test("round invariants hold across ten thousand rounds", { timeout: 30_000 }, () => {
   const pool = buildPool(allPacks);
 
   for (let i = 0; i < ITERATIONS; i++) {
@@ -54,28 +55,52 @@ test("round invariants hold across ten thousand rounds", () => {
     const innocentId = innocents[0]!.playerId;
 
     const caughtNoSteal = scoreRound(round, {
+      kind: "vote",
       accused: caughtId,
       accusedWasImpostor: true,
       stealBackCorrect: false,
     });
     const caughtWithSteal = scoreRound(round, {
+      kind: "vote",
       accused: caughtId,
       accusedWasImpostor: true,
       stealBackCorrect: true,
     });
     const missed = scoreRound(round, {
+      kind: "vote",
       accused: innocentId,
       accusedWasImpostor: false,
       stealBackCorrect: false,
+    });
+    const boldWin = scoreRound(round, {
+      kind: "declare",
+      declarer: caughtId,
+      declarerWasImpostor: true,
+      guessCorrect: true,
+    });
+    const boldFail = scoreRound(round, {
+      kind: "declare",
+      declarer: caughtId,
+      declarerWasImpostor: true,
+      guessCorrect: false,
+    });
+    const falseDeclare = scoreRound(round, {
+      kind: "declare",
+      declarer: innocentId,
+      declarerWasImpostor: false,
+      guessCorrect: false,
     });
 
     const sum = (d: Record<number, number>) => Object.values(d).reduce((a, b) => a + b, 0);
     expect(sum(caughtNoSteal)).toBe(innocents.length);
     expect(sum(caughtWithSteal)).toBe(innocents.length + 1);
     expect(sum(missed)).toBe(2 * impostorCount);
+    expect(sum(boldWin)).toBe(3);
+    expect(sum(boldFail)).toBe(innocents.length);
+    expect(sum(falseDeclare)).toBe(2 * impostorCount);
 
     // No score is ever negative.
-    for (const delta of [caughtNoSteal, caughtWithSteal, missed]) {
+    for (const delta of [caughtNoSteal, caughtWithSteal, missed, boldWin, boldFail, falseDeclare]) {
       for (const value of Object.values(delta)) expect(value).toBeGreaterThanOrEqual(0);
     }
   }

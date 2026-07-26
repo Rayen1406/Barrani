@@ -16,6 +16,9 @@ export function DiscussionScreen() {
         <Timer seconds={session.timerSeconds} onComplete={toVote} />
       )}
       <Button onClick={toVote}>{strings.startVote}</Button>
+      <Button variant="ghost" onClick={() => dispatch({ type: "openDeclare" })}>
+        {strings.wantsToGuess}
+      </Button>
     </section>
   );
 }

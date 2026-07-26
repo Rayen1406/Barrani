@@ -30,11 +30,22 @@ export type Round = {
   questionTargets: PlayerId[];
 };
 
-export type RoundOutcome = {
-  accused: PlayerId;
-  accusedWasImpostor: boolean;
-  /** Only meaningful when accusedWasImpostor is true. */
-  stealBackCorrect: boolean;
-};
+export type RoundOutcome =
+  /** The table voted someone out. */
+  | {
+      kind: "vote";
+      accused: PlayerId;
+      accusedWasImpostor: boolean;
+      /** Only meaningful when accusedWasImpostor is true. */
+      stealBackCorrect: boolean;
+    }
+  /** Someone stopped the round claiming to be البراني, staking it on the word. */
+  | {
+      kind: "declare";
+      declarer: PlayerId;
+      declarerWasImpostor: boolean;
+      /** Only meaningful when declarerWasImpostor is true. */
+      guessCorrect: boolean;
+    };
 
 export type ScoreDelta = Record<PlayerId, number>;

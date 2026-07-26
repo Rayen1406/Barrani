@@ -1,4 +1,5 @@
 import { useSession } from "../state/SessionContext";
+import { DeclareScreen } from "./screens/DeclareScreen";
 import { DiscussionScreen } from "./screens/DiscussionScreen";
 import { HandoffScreen } from "./screens/HandoffScreen";
 import { QuestionsScreen } from "./screens/QuestionsScreen";
@@ -20,16 +21,12 @@ export function RoundView() {
       return <QuestionsScreen />;
     case "discussion":
       return <DiscussionScreen />;
+    case "declare":
+      return <DeclareScreen />;
     case "vote":
       return <VoteScreen />;
     case "resolution":
-      return (
-        <ResolutionScreen
-          accused={phase.accused}
-          accusedWasImpostor={phase.accusedWasImpostor}
-          stealBackPending={phase.stealBackPending}
-        />
-      );
+      return <ResolutionScreen outcome={phase.outcome} pending={phase.pending} />;
     case "scoreboard":
       return <ScoreboardScreen />;
     default:

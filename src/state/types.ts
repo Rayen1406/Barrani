@@ -1,5 +1,5 @@
 import type { PairPool } from "../engine/pairPool";
-import type { PlayerId, Round, ScoreDelta, VariantSetting } from "../engine/types";
+import type { PlayerId, Round, RoundOutcome, ScoreDelta, VariantSetting } from "../engine/types";
 
 export type Player = { id: PlayerId; name: string };
 
@@ -15,14 +15,14 @@ export type Phase =
   /** offset is a step from round.startingPlayer, 0..playerCount-1 */
   | { name: "questions"; offset: number }
   | { name: "discussion" }
+  /** Someone claims to be البراني and is about to stake the round on the word. */
+  | { name: "declare" }
   | { name: "vote" }
   | {
       name: "resolution";
-      accused: PlayerId;
-      accusedWasImpostor: boolean;
-      /** true while the caught impostor still owes a steal-back guess */
-      stealBackPending: boolean;
-      stealBackCorrect: boolean;
+      outcome: RoundOutcome;
+      /** true while an impostor still owes a spoken guess */
+      pending: boolean;
     }
   | { name: "scoreboard" };
 
@@ -63,8 +63,11 @@ export type Action =
   | { type: "nextPlayer" }
   | { type: "nextQuestion" }
   | { type: "endDiscussion" }
+  | { type: "openDeclare" }
+  | { type: "cancelDeclare" }
+  | { type: "declareGuess"; declarer: PlayerId }
   | { type: "castVote"; accused: PlayerId }
-  | { type: "resolveStealBack"; correct: boolean }
+  | { type: "resolveGuess"; correct: boolean }
   | { type: "finishRound" }
   | { type: "nextRound" }
   | { type: "endGame" };

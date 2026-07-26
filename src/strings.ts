@@ -49,6 +49,18 @@ export const strings = {
   discussionTitle: "تحاوروا",
   startVote: "نصوّتوا",
   voteTitle: "شكون البرّاني؟",
+
+  // البراني stopping the round to guess
+  wantsToGuess: "البرّاني يحبّ يحزر",
+  declareTitle: "شكون قال إنو البرّاني؟",
+  declareWarning: "كان ما كانش هو البرّاني، الجماعة تخسر الدورة.",
+  backToDiscussion: "أرجع للنقاش",
+  sayTheWord: "قول الكلمة قدّام الجماعة",
+  notBarrani: "هذا موش البرّاني!",
+  tableBlundered: "الجماعة خسرت الدورة",
+  boldWin: "عرفها! البرّاني ربح",
+  boldFail: "ما عرفهاش. الجماعة ربحت",
+
   caught: "طلع برّاني!",
   missed: "لا، هذا ما كانش برّاني",
   stealBackPrompt: "البرّاني ينجم يربح الدورة كان عرف الكلمة",

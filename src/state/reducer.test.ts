@@ -132,8 +132,8 @@ test("voting out an impostor opens a pending steal-back", () => {
   const session = reducer(atVote, { type: "castVote", accused: impostorId });
   expect(session.phase).toMatchObject({
     name: "resolution",
-    accusedWasImpostor: true,
-    stealBackPending: true,
+    outcome: { kind: "vote", accusedWasImpostor: true },
+    pending: true,
   });
 });
 
@@ -143,8 +143,8 @@ test("voting out an innocent skips the steal-back entirely", () => {
   const session = reducer(atVote, { type: "castVote", accused: innocentId });
   expect(session.phase).toMatchObject({
     name: "resolution",
-    accusedWasImpostor: false,
-    stealBackPending: false,
+    outcome: { kind: "vote", accusedWasImpostor: false },
+    pending: false,
   });
 });
 
@@ -159,7 +159,7 @@ test("scores are applied exactly once, on finishRound", () => {
   const atVote = reachVote(5);
   const impostorId = atVote.round!.assignments.find((a) => a.isImpostor)!.playerId;
   let session = reducer(atVote, { type: "castVote", accused: impostorId });
-  session = reducer(session, { type: "resolveStealBack", correct: false });
+  session = reducer(session, { type: "resolveGuess", correct: false });
   expect(session.scores).toEqual({});
 
   session = reducer(session, { type: "finishRound" });
@@ -168,6 +168,68 @@ test("scores are applied exactly once, on finishRound", () => {
 
   const again = reducer(session, { type: "finishRound" });
   expect(again).toBe(session);
+});
+
+function reachDiscussion(playerCount: number): Session {
+  let session = revealEveryone(reducer(sessionWith(playerCount), { type: "startRound" }));
+  for (let i = 0; i < playerCount; i++) session = reducer(session, { type: "nextQuestion" });
+  return session;
+}
+
+test("anyone can open the declaration screen from discussion", () => {
+  const session = reducer(reachDiscussion(5), { type: "openDeclare" });
+  expect(session.phase).toEqual({ name: "declare" });
+});
+
+test("declaring can be cancelled back to discussion", () => {
+  let session = reducer(reachDiscussion(5), { type: "openDeclare" });
+  session = reducer(session, { type: "cancelDeclare" });
+  expect(session.phase).toEqual({ name: "discussion" });
+});
+
+test("البراني declaring owes a spoken guess", () => {
+  const atDiscussion = reachDiscussion(5);
+  const impostorId = atDiscussion.round!.assignments.find((a) => a.isImpostor)!.playerId;
+  let session = reducer(atDiscussion, { type: "openDeclare" });
+  session = reducer(session, { type: "declareGuess", declarer: impostorId });
+  expect(session.phase).toMatchObject({
+    name: "resolution",
+    outcome: { kind: "declare", declarerWasImpostor: true },
+    pending: true,
+  });
+});
+
+test("a correct declared guess scores البراني three and nobody else", () => {
+  const atDiscussion = reachDiscussion(5);
+  const impostorId = atDiscussion.round!.assignments.find((a) => a.isImpostor)!.playerId;
+  let session = reducer(atDiscussion, { type: "openDeclare" });
+  session = reducer(session, { type: "declareGuess", declarer: impostorId });
+  session = reducer(session, { type: "resolveGuess", correct: true });
+  session = reducer(session, { type: "finishRound" });
+  expect(session.scores[impostorId]).toBe(3);
+  expect(Object.values(session.scores).reduce((a, b) => a + b, 0)).toBe(3);
+});
+
+test("an innocent falsely declaring ends the round immediately for البراني", () => {
+  const atDiscussion = reachDiscussion(5);
+  const innocentId = atDiscussion.round!.assignments.find((a) => !a.isImpostor)!.playerId;
+  const impostorId = atDiscussion.round!.assignments.find((a) => a.isImpostor)!.playerId;
+
+  let session = reducer(atDiscussion, { type: "openDeclare" });
+  session = reducer(session, { type: "declareGuess", declarer: innocentId });
+
+  // No guess is owed — a false declaration is decided on the spot.
+  expect(session.phase).toMatchObject({ name: "resolution", pending: false });
+
+  session = reducer(session, { type: "finishRound" });
+  expect(session.scores[impostorId]).toBe(2);
+  expect(session.scores[innocentId]).toBe(0);
+});
+
+test("declaring is unreachable before the round has been played", () => {
+  const session = sessionWith(5);
+  expect(reducer(session, { type: "openDeclare" })).toBe(session);
+  expect(reducer(session, { type: "declareGuess", declarer: 0 })).toBe(session);
 });
 
 test("deselecting every pack makes the next round report exhaustion", () => {
@@ -212,7 +274,7 @@ test("unknown-for-this-phase actions never throw and never change identity", () 
     { type: "nextQuestion" },
     { type: "endDiscussion" },
     { type: "castVote", accused: 0 },
-    { type: "resolveStealBack", correct: true },
+    { type: "resolveGuess", correct: true },
     { type: "finishRound" },
   ];
   for (const action of noops) expect(reducer(session, action)).toBe(session);

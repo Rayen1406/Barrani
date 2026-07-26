@@ -21,7 +21,15 @@ function outcome(
   accusedWasImpostor: boolean,
   stealBackCorrect = false,
 ): RoundOutcome {
-  return { accused, accusedWasImpostor, stealBackCorrect };
+  return { kind: "vote", accused, accusedWasImpostor, stealBackCorrect };
+}
+
+function declared(
+  declarer: number,
+  declarerWasImpostor: boolean,
+  guessCorrect = false,
+): RoundOutcome {
+  return { kind: "declare", declarer, declarerWasImpostor, guessCorrect };
 }
 
 test("caught impostor, failed steal-back: every innocent scores one", () => {
@@ -77,4 +85,32 @@ test("applyDelta does not mutate its inputs", () => {
   const scores = { 0: 3 };
   applyDelta(scores, { 0: 1 });
   expect(scores).toEqual({ 0: 3 });
+});
+
+test("البراني declaring and guessing right scores three and nobody else scores", () => {
+  const delta = scoreRound(roundWith([2], 5), declared(2, true, true));
+  expect(delta).toEqual({ 0: 0, 1: 0, 2: 3, 3: 0, 4: 0 });
+});
+
+test("البراني declaring and guessing wrong hands the round to the innocents", () => {
+  const delta = scoreRound(roundWith([2], 5), declared(2, true, false));
+  expect(delta).toEqual({ 0: 1, 1: 1, 2: 0, 3: 1, 4: 1 });
+});
+
+test("an innocent falsely declaring hands the round to البراني", () => {
+  const delta = scoreRound(roundWith([2], 5), declared(3, false));
+  expect(delta).toEqual({ 0: 0, 1: 0, 2: 2, 3: 0, 4: 0 });
+});
+
+test("a false declaration rewards both impostors when there are two", () => {
+  const delta = scoreRound(roundWith([1, 4], 8), declared(0, false));
+  expect(delta[1]).toBe(2);
+  expect(delta[4]).toBe(2);
+  expect(delta[0]).toBe(0);
+});
+
+test("a correct bold guess beats merely surviving a vote", () => {
+  const bold = scoreRound(roundWith([2], 5), declared(2, true, true))[2]!;
+  const survived = scoreRound(roundWith([2], 5), outcome(3, false))[2]!;
+  expect(bold).toBeGreaterThan(survived);
 });
