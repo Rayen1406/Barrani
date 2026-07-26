@@ -157,7 +157,10 @@ test("scores are applied exactly once, on finishRound", () => {
 });
 
 test("deselecting every pack makes the next round report exhaustion", () => {
-  let session = reducer(sessionWith(5), { type: "togglePack", id: "makla" });
+  let session = sessionWith(5);
+  for (const id of [...session.selectedPackIds]) {
+    session = reducer(session, { type: "togglePack", id });
+  }
   expect(session.selectedPackIds).toEqual([]);
   session = reducer(session, { type: "startRound" });
   expect(session.exhausted).toBe(true);
