@@ -50,6 +50,9 @@ h1 {
   display: block;
   width: min(100%, 20rem);
   height: auto;
+  /* Never let the logo eat a short screen — the buttons must stay visible. */
+  max-height: 38vh;
+  object-fit: contain;
   margin-inline: auto;
   -webkit-mask-image:
     linear-gradient(to bottom, transparent 0%, #000 5%, #000 95%, transparent 100%),
@@ -65,12 +68,22 @@ h2 {
 }
 
 /* Layout */
+main {
+  overflow-y: auto;
+}
 .screen {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
-  padding: var(--space-3);
   min-height: 100%;
+  /* One phone-shaped column, centered on tablets and in landscape,
+     padded clear of notches and gesture bars. */
+  width: min(100%, var(--content-max));
+  margin-inline: auto;
+  padding-block: max(var(--space-3), env(safe-area-inset-top))
+    max(var(--space-3), env(safe-area-inset-bottom));
+  padding-inline: max(var(--space-3), env(safe-area-inset-right))
+    max(var(--space-3), env(safe-area-inset-left));
 }
 .stack {
   display: flex;
@@ -177,13 +190,15 @@ legend {
 }
 
 /* Round */
+/* `safe` keeps the top reachable when a short landscape screen overflows —
+   plain `center` would clip content above the scrollable area. */
 .screen--home,
 .screen--handoff,
 .screen--reveal,
 .screen--questions,
 .screen--discussion,
 .screen--resolution {
-  justify-content: center;
+  justify-content: safe center;
   text-align: center;
 }
 
@@ -232,9 +247,12 @@ legend {
 .card--impostor .dim {
   color: rgba(243, 236, 224, 0.88);
 }
+.word {
+  overflow-wrap: anywhere;
+}
 .hold {
   width: 100%;
-  min-height: 45vh;
+  min-height: min(45vh, 22rem);
   border: 3px dashed var(--border);
   border-radius: var(--radius);
   background: var(--surface);

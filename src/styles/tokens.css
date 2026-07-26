@@ -16,17 +16,21 @@
   --secondary: #e0a34a; /* warm amber, for inline notices */
   --danger: #f03345; /* logo crimson */
 
-  --step-0: 1.125rem;
-  --step-1: 1.5rem;
-  --step-2: 2rem;
-  --step-3: 2.75rem;
-  --step-4: 4rem;
+  /* Fluid type: readable on a 320px phone, capped so tablets don't shout. */
+  --step-0: clamp(1rem, 0.92rem + 0.5vw, 1.2rem);
+  --step-1: clamp(1.25rem, 1.1rem + 1vw, 1.6rem);
+  --step-2: clamp(1.6rem, 1.35rem + 1.6vw, 2.1rem);
+  --step-3: clamp(2rem, 1.6rem + 2.6vw, 2.9rem);
+  --step-4: clamp(2.5rem, 1.9rem + 4vw, 4.2rem);
 
   --space-1: 0.5rem;
-  --space-2: 1rem;
-  --space-3: 1.5rem;
-  --space-4: 2.5rem;
+  --space-2: clamp(0.75rem, 0.6rem + 0.8vw, 1rem);
+  --space-3: clamp(1rem, 0.8rem + 1.2vw, 1.5rem);
+  --space-4: clamp(1.5rem, 1.1rem + 2vw, 2.5rem);
 
   --radius: 1.25rem;
   --tap-min: 56px;
+
+  /* One column, phone-shaped, even on a tablet or in landscape. */
+  --content-max: 34rem;
 }
