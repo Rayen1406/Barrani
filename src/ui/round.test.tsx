@@ -56,11 +56,10 @@ function reachVote(): string {
   return impostor;
 }
 
-/** Reads a player's score off the scoreboard row, converting Arabic-Indic digits back. */
+/** Reads a player's score off the scoreboard row. */
 function scoreOf(name: string): number {
   const row = screen.getByText(name).closest("li")!;
-  const digits = (row.textContent ?? "").replace(/[^٠-٩]/gu, "");
-  return Number(digits.replace(/[٠-٩]/gu, (d) => String("٠١٢٣٤٥٦٧٨٩".indexOf(d))));
+  return Number((row.textContent ?? "").replace(/\D/g, ""));
 }
 
 beforeEach(() => {
@@ -133,7 +132,7 @@ test("the discussion timer appears and counts when one is configured", () => {
   click(strings.start);
   revealAll();
   for (let i = 0; i < NAMES.length * 2; i++) click(strings.saidIt);
-  expect(screen.getByRole("timer")).toHaveTextContent("١:٠٠");
+  expect(screen.getByRole("timer")).toHaveTextContent("1:00");
 });
 
 test("the vote screen offers every player", () => {

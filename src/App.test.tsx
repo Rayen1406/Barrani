@@ -23,10 +23,10 @@ test("navigates to players and back", () => {
   expect(screen.getByRole("heading", { name: strings.appName })).toBeInTheDocument();
 });
 
-test("the rules screen shows the version in Arabic-Indic digits", () => {
+test("the rules screen shows the version", () => {
   render(<App seed={1} />);
   fireEvent.click(screen.getByRole("button", { name: strings.rules }));
-  expect(screen.getByText(/١\.٠\.٠/)).toBeInTheDocument();
+  expect(screen.getByText(/1\.0\.0/)).toBeInTheDocument();
 });
 
 test("players added on the players screen persist and enable start", () => {

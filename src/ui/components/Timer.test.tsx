@@ -12,13 +12,13 @@ beforeEach(() => {
 });
 afterEach(() => vi.useRealTimers());
 
-test("counts down in mm:ss using Arabic-Indic digits", () => {
+test("counts down in mm:ss", () => {
   render(<Timer seconds={65} onComplete={() => {}} />);
-  expect(screen.getByRole("timer")).toHaveTextContent("١:٠٥");
+  expect(screen.getByRole("timer")).toHaveTextContent("1:05");
   act(() => {
     vi.advanceTimersByTime(5000);
   });
-  expect(screen.getByRole("timer")).toHaveTextContent("١:٠٠");
+  expect(screen.getByRole("timer")).toHaveTextContent("1:00");
 });
 
 test("calls onComplete exactly once when it reaches zero", () => {
@@ -35,7 +35,7 @@ test("never displays a negative time", () => {
   act(() => {
     vi.advanceTimersByTime(10_000);
   });
-  expect(screen.getByRole("timer")).toHaveTextContent("٠:٠٠");
+  expect(screen.getByRole("timer")).toHaveTextContent("0:00");
 });
 
 test("holds the screen awake while mounted and releases on unmount", () => {

@@ -2,7 +2,6 @@ import { currentHintPlayer } from "../../state/reducer";
 import { useDispatch, useSession } from "../../state/SessionContext";
 import { strings } from "../../strings";
 import { Button } from "../components/Button";
-import { toArabicDigits } from "../components/Timer";
 
 export function HintsScreen({ pass }: { pass: 1 | 2 }) {
   const session = useSession();
@@ -13,7 +12,7 @@ export function HintsScreen({ pass }: { pass: 1 | 2 }) {
   return (
     <section className="screen screen--hints">
       <p className="dim">
-        {strings.passLabel} {toArabicDigits(pass)}
+        {strings.passLabel} {pass}
       </p>
       <h2>{strings.hintsTitle}</h2>
       <p className="dim">{strings.turnOf}</p>

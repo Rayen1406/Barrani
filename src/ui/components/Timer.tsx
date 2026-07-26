@@ -1,14 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { setKeepAwake } from "../../platform/keepAwake";
 
-export function toArabicDigits(value: string | number): string {
-  return String(value).replace(/\d/g, (d) => "٠١٢٣٤٥٦٧٨٩"[Number(d)]!);
-}
-
 function format(totalSeconds: number): string {
   const minutes = Math.floor(totalSeconds / 60);
   const seconds = totalSeconds % 60;
-  return `${toArabicDigits(minutes)}:${toArabicDigits(String(seconds).padStart(2, "0"))}`;
+  return `${minutes}:${String(seconds).padStart(2, "0")}`;
 }
 
 export function Timer({ seconds, onComplete }: { seconds: number; onComplete: () => void }) {
@@ -34,7 +30,7 @@ export function Timer({ seconds, onComplete }: { seconds: number; onComplete: ()
   }, [remaining, onComplete]);
 
   return (
-    <output role="timer" className="timer">
+    <output role="timer" className="timer" dir="ltr">
       {format(remaining)}
     </output>
   );

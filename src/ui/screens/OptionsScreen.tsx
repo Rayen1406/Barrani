@@ -5,7 +5,6 @@ import { TIMER_CHOICES } from "../../persist/schema";
 import { useDispatch, useSession } from "../../state/SessionContext";
 import { strings } from "../../strings";
 import { Button } from "../components/Button";
-import { toArabicDigits } from "../components/Timer";
 
 const VARIANTS: { value: VariantSetting; label: string; hint?: string }[] = [
   { value: "random", label: strings.variantRandom },
@@ -48,7 +47,7 @@ export function OptionsScreen() {
               checked={session.impostorCount === count}
               onChange={() => dispatch({ type: "setImpostorCount", count })}
             />
-            <span>{toArabicDigits(count)}</span>
+            <span>{count}</span>
           </label>
         ))}
       </fieldset>
@@ -64,9 +63,7 @@ export function OptionsScreen() {
               onChange={() => dispatch({ type: "setTimer", seconds })}
             />
             <span>
-              {seconds === null
-                ? strings.noTimer
-                : `${toArabicDigits(seconds / 60)} ${strings.minutes}`}
+              {seconds === null ? strings.noTimer : `${seconds / 60} ${strings.minutes}`}
             </span>
           </label>
         ))}

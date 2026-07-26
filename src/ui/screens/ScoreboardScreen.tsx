@@ -1,7 +1,6 @@
 import { useDispatch, useSession } from "../../state/SessionContext";
 import { strings } from "../../strings";
 import { Button } from "../components/Button";
-import { toArabicDigits } from "../components/Timer";
 
 export function ScoreboardScreen() {
   const session = useSession();
@@ -26,7 +25,7 @@ export function ScoreboardScreen() {
         {ranked.map((player) => (
           <li key={player.id} className="row">
             <span>{player.name}</span>
-            <strong>{toArabicDigits(session.scores[player.id] ?? 0)}</strong>
+            <strong>{session.scores[player.id] ?? 0}</strong>
           </li>
         ))}
       </ul>
