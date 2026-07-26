@@ -12,8 +12,8 @@ export type Phase =
   /** index is a seat, 0..playerCount-1 */
   | { name: "handoff"; index: number }
   | { name: "reveal"; index: number }
-  /** offset is a step from round.startingPlayer, 0..playerCount-1 */
-  | { name: "questions"; offset: number }
+  /** pass is 0-based; offset is a step from round.startingPlayer */
+  | { name: "questions"; pass: number; offset: number }
   | { name: "discussion" }
   /** Someone claims to be البراني and is about to stake the round on the word. */
   | { name: "declare" }

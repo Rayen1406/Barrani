@@ -1,9 +1,10 @@
+import { QUESTION_PASSES } from "../../engine/questions";
 import { currentAsker, currentTarget } from "../../state/reducer";
 import { useDispatch, useSession } from "../../state/SessionContext";
 import { strings } from "../../strings";
 import { Button } from "../components/Button";
 
-export function QuestionsScreen() {
+export function QuestionsScreen({ pass }: { pass: number }) {
   const session = useSession();
   const dispatch = useDispatch();
 
@@ -14,6 +15,9 @@ export function QuestionsScreen() {
 
   return (
     <section className="screen screen--questions">
+      <p className="dim">
+        {strings.passLabel} {pass + 1} / {QUESTION_PASSES}
+      </p>
       <p className="dim">{strings.turnOf}</p>
 
       <div className="ask">

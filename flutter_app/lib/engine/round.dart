@@ -23,20 +23,32 @@ List<Assignment> assignRoles(RoundConfig config, WordPair pair, Rng rng) {
   }).toList();
 }
 
-/// Who each player must question, as targets[asker] = target.
-///
-/// Built as a random cycle, which guarantees two things a plain random pick
-/// would not: nobody is sent to question themselves, and every player is
-/// questioned exactly once — so البراني can never slip through unasked.
-List<PlayerId> assignQuestionTargets(int playerCount, Rng rng) {
-  if (playerCount < 2) return const [];
+/// Two turns around the table — one question each is not enough to go on.
+const int questionPasses = 2;
 
+List<PlayerId> _onePass(int playerCount, Rng rng) {
   final order = rng.shuffle(List<int>.generate(playerCount, (i) => i));
   final targets = List<int>.filled(playerCount, 0);
   for (var i = 0; i < order.length; i++) {
     targets[order[i]] = order[(i + 1) % order.length];
   }
   return targets;
+}
+
+/// Who each player questions, per pass: targets[pass][asker] = target.
+///
+/// Each pass is an independent random cycle, which guarantees two things a
+/// plain random pick would not: nobody is sent to question themselves, and
+/// every player is questioned exactly once per pass — so البراني can never
+/// slip through unasked. Passes are drawn separately so the second turn
+/// generally pairs people up differently from the first.
+List<List<PlayerId>> assignQuestionTargets(
+  int playerCount,
+  Rng rng, {
+  int passes = questionPasses,
+}) {
+  if (playerCount < 2) return List.generate(passes, (_) => const []);
+  return List.generate(passes, (_) => _onePass(playerCount, rng));
 }
 
 int suggestImpostorCount(int playerCount) => playerCount >= 7 ? 2 : 1;

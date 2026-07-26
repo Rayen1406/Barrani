@@ -26,8 +26,8 @@ export type Round = {
   variant: Variant;
   assignments: Assignment[];
   startingPlayer: PlayerId;
-  /** questionTargets[asker] = the player that asker must question. */
-  questionTargets: PlayerId[];
+  /** questionTargets[pass][asker] = the player that asker must question. */
+  questionTargets: PlayerId[][];
 };
 
 export type RoundOutcome =

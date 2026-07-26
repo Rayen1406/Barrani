@@ -42,6 +42,7 @@ export const strings = {
   youAreBarrani: "إنت البرّاني",
   barraniHint: "ما عندكش كلمة. اسمع مليح و مثّل روحك.",
   yourWord: "كلمتك",
+  passLabel: "الدورة",
   turnOf: "الدور متاع",
   asks: "يسأل",
   questionHint: "اسألو سؤال محيّر على الكلمة. لازم جوابو يفضحو كان ما يعرفهاش.",
@@ -63,7 +64,7 @@ export const strings = {
 
   caught: "طلع برّاني!",
   missed: "لا، هذا ما كانش برّاني",
-  stealBackPrompt: "البرّاني ينجم يربح الدورة كان عرف الكلمة",
+  stealBackPrompt: "عندو فرصة وحدة باش يربح الدورة",
   guessedRight: "عرفها",
   guessedWrong: "ما عرفهاش",
   secretWordWas: "الكلمة كانت",

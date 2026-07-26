@@ -1,3 +1,4 @@
+import { QUESTION_PASSES } from "../engine/questions";
 import { defaultSettings } from "../persist/schema";
 import { createSession, currentAsker, currentTarget, reducer } from "./reducer";
 import type { Action, Session } from "./types";
@@ -22,7 +23,9 @@ function revealEveryone(session: Session): Session {
 
 function reachVote(playerCount: number): Session {
   let session = revealEveryone(reducer(sessionWith(playerCount), { type: "startRound" }));
-  for (let i = 0; i < playerCount; i++) session = reducer(session, { type: "nextQuestion" });
+  for (let i = 0; i < playerCount * QUESTION_PASSES; i++) {
+    session = reducer(session, { type: "nextQuestion" });
+  }
   return reducer(session, { type: "endDiscussion" });
 }
 
@@ -81,7 +84,7 @@ test("reveal then nextPlayer walks every seat before hints begin", () => {
 
 test("after the last seat reveals, questioning starts at offset zero", () => {
   const session = revealEveryone(reducer(sessionWith(4), { type: "startRound" }));
-  expect(session.phase).toEqual({ name: "questions", offset: 0 });
+  expect(session.phase).toEqual({ name: "questions", pass: 0, offset: 0 });
 });
 
 test("a reveal cannot be skipped — nextPlayer during handoff is a no-op", () => {
@@ -97,11 +100,15 @@ test("the vote is unreachable before every player has revealed", () => {
   expect(reducer(session, { type: "endDiscussion" })).toBe(session);
 });
 
-test("questioning goes once around the table then opens discussion", () => {
+test("questioning goes twice around the table then opens discussion", () => {
   let session = revealEveryone(reducer(sessionWith(3), { type: "startRound" }));
   for (let i = 0; i < 2; i++) session = reducer(session, { type: "nextQuestion" });
-  expect(session.phase).toEqual({ name: "questions", offset: 2 });
+  expect(session.phase).toEqual({ name: "questions", pass: 0, offset: 2 });
+
+  // End of the first pass rolls into the second, not into discussion.
   session = reducer(session, { type: "nextQuestion" });
+  expect(session.phase).toEqual({ name: "questions", pass: 1, offset: 0 });
+  for (let i = 0; i < 3; i++) session = reducer(session, { type: "nextQuestion" });
   expect(session.phase).toEqual({ name: "discussion" });
 });
 
@@ -172,7 +179,9 @@ test("scores are applied exactly once, on finishRound", () => {
 
 function reachDiscussion(playerCount: number): Session {
   let session = revealEveryone(reducer(sessionWith(playerCount), { type: "startRound" }));
-  for (let i = 0; i < playerCount; i++) session = reducer(session, { type: "nextQuestion" });
+  for (let i = 0; i < playerCount * QUESTION_PASSES; i++) {
+    session = reducer(session, { type: "nextQuestion" });
+  }
   return session;
 }
 

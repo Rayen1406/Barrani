@@ -35,10 +35,11 @@ class RevealPhase extends Phase {
   const RevealPhase(this.index);
 }
 
-/// offset is a step from round.startingPlayer, 0..playerCount-1
+/// pass is 0-based; offset is a step from round.startingPlayer
 class QuestionsPhase extends Phase {
+  final int pass;
   final int offset;
-  const QuestionsPhase(this.offset);
+  const QuestionsPhase(this.pass, this.offset);
 }
 
 class DiscussionPhase extends Phase {

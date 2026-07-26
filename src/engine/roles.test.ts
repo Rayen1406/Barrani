@@ -67,7 +67,10 @@ test("isImpostor reads the round correctly", () => {
     variant: "barrani",
     assignments,
     startingPlayer: 0,
-    questionTargets: [1, 2, 3, 4, 0],
+    questionTargets: [
+      [1, 2, 3, 4, 0],
+      [2, 3, 4, 0, 1],
+    ],
   };
   const impostorId = assignments.find((a) => a.isImpostor)!.playerId;
   expect(isImpostor(round, impostorId)).toBe(true);

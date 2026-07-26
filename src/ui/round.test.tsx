@@ -1,5 +1,6 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { App } from "../App";
+import { QUESTION_PASSES } from "../engine/questions";
 import { PERSIST_KEY } from "../persist/schema";
 import { strings } from "../strings";
 
@@ -51,7 +52,7 @@ function reachVote(): string {
   setup();
   click(strings.start);
   const impostor = revealAll();
-  for (let i = 0; i < NAMES.length; i++) click(strings.asked);
+  for (let i = 0; i < NAMES.length * QUESTION_PASSES; i++) click(strings.asked);
   click(strings.startVote);
   return impostor;
 }
@@ -154,7 +155,7 @@ test("with no timer configured, discussion offers the vote button and no clock",
   setup(null);
   click(strings.start);
   revealAll();
-  for (let i = 0; i < NAMES.length; i++) click(strings.asked);
+  for (let i = 0; i < NAMES.length * QUESTION_PASSES; i++) click(strings.asked);
   expect(screen.queryByRole("timer")).not.toBeInTheDocument();
   expect(screen.getByRole("button", { name: strings.startVote })).toBeInTheDocument();
 });
@@ -163,7 +164,7 @@ test("the discussion timer appears and counts when one is configured", () => {
   setup(60);
   click(strings.start);
   revealAll();
-  for (let i = 0; i < NAMES.length; i++) click(strings.asked);
+  for (let i = 0; i < NAMES.length * QUESTION_PASSES; i++) click(strings.asked);
   expect(screen.getByRole("timer")).toHaveTextContent("1:00");
 });
 

@@ -32,8 +32,9 @@ export function ResolutionScreen({ outcome, pending }: Props) {
         <h2 className="verdict verdict--caught">
           {isDeclaration ? strings.wantsToGuess : strings.caught}
         </h2>
-        <p>{nameOf(isDeclaration ? outcome.declarer : outcome.accused)}</p>
-        <p className="dim">{isDeclaration ? strings.sayTheWord : strings.stealBackPrompt}</p>
+        <h3>{nameOf(isDeclaration ? outcome.declarer : outcome.accused)}</h3>
+        {!isDeclaration && <p className="dim">{strings.stealBackPrompt}</p>}
+        <p className="notice">{strings.sayTheWord}</p>
         <div className="stack">
           <Button onClick={() => dispatch({ type: "resolveGuess", correct: true })}>
             {strings.guessedRight}

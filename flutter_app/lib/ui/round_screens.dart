@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../engine/round.dart';
 import '../engine/types.dart';
 import '../state/phase.dart';
 import '../state/store.dart';
@@ -71,7 +72,8 @@ class RevealScreen extends StatelessWidget {
 
 class QuestionsScreen extends StatelessWidget {
   final SessionStore store;
-  const QuestionsScreen(this.store, {super.key});
+  final int pass;
+  const QuestionsScreen(this.store, this.pass, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -82,6 +84,10 @@ class QuestionsScreen extends StatelessWidget {
     return Screen(
       centered: true,
       children: [
+        Text('${S.passLabel} ${pass + 1} / $questionPasses',
+            textAlign: TextAlign.center,
+            style: const TextStyle(color: C.textDim, fontSize: 17)),
+        const SizedBox(height: 8),
         const Text(S.turnOf,
             textAlign: TextAlign.center, style: TextStyle(color: C.textDim, fontSize: 17)),
         const SizedBox(height: 12),
@@ -213,11 +219,18 @@ class ResolutionScreen extends StatelessWidget {
           _Verdict(isDeclaration ? S.wantsToGuess : S.caught, won: false),
           Text(who ?? '',
               textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 24, color: C.text)),
+              style: const TextStyle(
+                  fontSize: 26, fontWeight: FontWeight.w700, color: C.text)),
           const SizedBox(height: 8),
-          Text(isDeclaration ? S.sayTheWord : S.stealBackPrompt,
+          if (!isDeclaration)
+            const Text(S.stealBackPrompt,
+                textAlign: TextAlign.center,
+                style: TextStyle(color: C.textDim, fontSize: 16)),
+          const SizedBox(height: 6),
+          const Text(S.sayTheWord,
               textAlign: TextAlign.center,
-              style: const TextStyle(color: C.textDim, fontSize: 16)),
+              style: TextStyle(
+                  color: C.secondary, fontSize: 18, fontWeight: FontWeight.w700)),
           const SizedBox(height: 16),
           Btn(S.guessedRight, onPressed: () => store.resolveGuess(true)),
           Btn(S.guessedWrong,

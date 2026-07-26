@@ -72,7 +72,7 @@ class RootScreen extends StatelessWidget {
               RulesPhase() => RulesScreen(store),
               HandoffPhase(:final index) => HandoffScreen(store, index),
               RevealPhase(:final index) => RevealScreen(store, index),
-              QuestionsPhase() => QuestionsScreen(store),
+              QuestionsPhase(:final pass) => QuestionsScreen(store, pass),
               DiscussionPhase() => DiscussionScreen(store),
               DeclarePhase() => DeclareScreen(store),
               VotePhase() => VoteScreen(store),

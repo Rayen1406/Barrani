@@ -18,7 +18,7 @@ export function RoundView() {
     case "reveal":
       return <RevealScreen index={phase.index} />;
     case "questions":
-      return <QuestionsScreen />;
+      return <QuestionsScreen pass={phase.pass} />;
     case "discussion":
       return <DiscussionScreen />;
     case "declare":

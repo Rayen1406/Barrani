@@ -1,6 +1,7 @@
 import 'package:barrani/engine/types.dart';
 import 'package:barrani/state/phase.dart';
 import 'package:barrani/state/session.dart';
+import 'package:barrani/engine/round.dart';
 import 'package:barrani/state/store.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -22,7 +23,7 @@ void revealEveryone(SessionStore store) {
 }
 
 void askEveryone(SessionStore store) {
-  for (var i = 0; i < store.session.players.length; i++) {
+  for (var i = 0; i < store.session.players.length * questionPasses; i++) {
     store.nextQuestion();
   }
 }
@@ -67,27 +68,61 @@ void main() {
     expect(store.session.phase, isA<HandoffPhase>());
   });
 
-  test('questioning goes once around the table then opens discussion', () {
+  test('questioning goes twice around the table then opens discussion', () {
     final store = storeWith(4)..startRound();
     revealEveryone(store);
-    askEveryone(store);
+
+    // First pass ends by rolling into the second, not into discussion.
+    for (var i = 0; i < 4; i++) {
+      store.nextQuestion();
+    }
+    expect(store.session.phase, isA<QuestionsPhase>());
+    expect((store.session.phase as QuestionsPhase).pass, 1);
+
+    for (var i = 0; i < 4; i++) {
+      store.nextQuestion();
+    }
     expect(store.session.phase, isA<DiscussionPhase>());
   });
 
-  test('every asker gets a target, never themselves, everyone asked once', () {
+  test('every asker gets a target, never themselves, everyone asked once per pass', () {
     final store = storeWith(5)..startRound();
     revealEveryone(store);
 
-    final targets = <int>[];
-    for (var i = 0; i < 5; i++) {
-      final asker = store.session.currentAsker;
-      final target = store.session.currentTarget;
-      expect(target, isNotNull);
-      expect(target, isNot(asker));
-      targets.add(target!);
-      store.nextQuestion();
+    for (var pass = 0; pass < questionPasses; pass++) {
+      final targets = <int>[];
+      for (var i = 0; i < 5; i++) {
+        final asker = store.session.currentAsker;
+        final target = store.session.currentTarget;
+        expect(target, isNotNull);
+        expect(target, isNot(asker));
+        targets.add(target!);
+        store.nextQuestion();
+      }
+      expect(targets..sort(), [0, 1, 2, 3, 4], reason: 'pass $pass');
     }
-    expect(targets..sort(), [0, 1, 2, 3, 4]);
+  });
+
+  test('the steal-back is offered when the table votes البراني out', () {
+    final store = storeWith(5)..startRound();
+    revealEveryone(store);
+    askEveryone(store);
+    store.endDiscussion();
+
+    final impostorId =
+        store.session.round!.assignments.firstWhere((a) => a.isImpostor).playerId;
+    store.castVote(impostorId);
+
+    // البراني owes a spoken guess before the round can be scored.
+    final phase = store.session.phase as ResolutionPhase;
+    expect(phase.pending, isTrue);
+    store.finishRound();
+    expect(store.session.phase, isA<ResolutionPhase>());
+
+    // Guessing right earns the point back.
+    store.resolveGuess(true);
+    store.finishRound();
+    expect(store.session.scores[impostorId], 1);
   });
 
   test('voting out an impostor opens a pending steal-back', () {

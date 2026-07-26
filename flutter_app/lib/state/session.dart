@@ -126,9 +126,13 @@ class Session {
 
   /// Who the current asker must question, chosen by the engine at deal time.
   PlayerId? get currentTarget {
+    final p = phase;
     final asker = currentAsker;
-    if (asker == null || round == null) return null;
-    final targets = round!.questionTargets;
+    if (asker == null || p is! QuestionsPhase || round == null) return null;
+
+    final passes = round!.questionTargets;
+    if (p.pass >= passes.length) return null;
+    final targets = passes[p.pass];
     return asker < targets.length ? targets[asker] : null;
   }
 

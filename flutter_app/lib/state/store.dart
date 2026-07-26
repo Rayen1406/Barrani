@@ -148,17 +148,24 @@ class SessionStore extends ChangeNotifier {
     _set(_session.copyWith(
       phase: next < _session.players.length
           ? HandoffPhase(next)
-          : const QuestionsPhase(0),
+          : const QuestionsPhase(0, 0),
     ));
   }
 
   void nextQuestion() {
     final p = _session.phase;
     if (p is! QuestionsPhase) return;
-    final next = p.offset + 1;
+
+    final nextOffset = p.offset + 1;
+    if (nextOffset < _session.players.length) {
+      _set(_session.copyWith(phase: QuestionsPhase(p.pass, nextOffset)));
+      return;
+    }
+
+    final nextPass = p.pass + 1;
     _set(_session.copyWith(
-      phase: next < _session.players.length
-          ? QuestionsPhase(next)
+      phase: nextPass < questionPasses
+          ? QuestionsPhase(nextPass, 0)
           : const DiscussionPhase(),
     ));
   }

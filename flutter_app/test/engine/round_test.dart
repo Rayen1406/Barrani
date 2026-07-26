@@ -110,26 +110,33 @@ void main() {
   });
 
   group('question targets', () {
-    test('nobody is sent to question themselves', () {
+    test('there are two passes around the table', () {
+      expect(questionPasses, 2);
+      expect(assignQuestionTargets(5, Rng(1)).length, 2);
+    });
+
+    test('nobody is sent to question themselves, in any pass', () {
       for (var count = 3; count <= 12; count++) {
         for (var seed = 0; seed < 40; seed++) {
-          final targets = assignQuestionTargets(count, Rng(seed));
-          for (var asker = 0; asker < targets.length; asker++) {
-            expect(targets[asker], isNot(asker));
+          for (final pass in assignQuestionTargets(count, Rng(seed))) {
+            for (var asker = 0; asker < pass.length; asker++) {
+              expect(pass[asker], isNot(asker));
+            }
           }
         }
       }
     });
 
-    test('every player is questioned exactly once', () {
+    test('every player is questioned exactly once per pass', () {
       for (var count = 3; count <= 12; count++) {
-        final targets = assignQuestionTargets(count, Rng(count))..sort();
-        expect(targets, List.generate(count, (i) => i));
+        for (final pass in assignQuestionTargets(count, Rng(count))) {
+          expect(List.of(pass)..sort(), List.generate(count, (i) => i));
+        }
       }
     });
 
-    test('a table too small to pair returns nothing', () {
-      expect(assignQuestionTargets(1, Rng(1)), isEmpty);
+    test('a table too small to pair returns empty passes', () {
+      expect(assignQuestionTargets(1, Rng(1)), [[], []]);
     });
   });
 
@@ -196,12 +203,14 @@ void main() {
 
         expect(round.startingPlayer, inInclusiveRange(0, playerCount - 1));
 
-        // Nobody questions themselves; everyone is questioned once.
-        final targets = List.of(round.questionTargets);
-        for (var asker = 0; asker < targets.length; asker++) {
-          expect(targets[asker], isNot(asker));
+        // Nobody questions themselves; everyone is questioned once per pass.
+        expect(round.questionTargets.length, questionPasses);
+        for (final pass in round.questionTargets) {
+          for (var asker = 0; asker < pass.length; asker++) {
+            expect(pass[asker], isNot(asker));
+          }
+          expect(List.of(pass)..sort(), List.generate(playerCount, (i) => i));
         }
-        expect(targets..sort(), List.generate(playerCount, (i) => i));
 
         final caughtId = impostors.first.playerId;
         final innocentId = innocents.first.playerId;

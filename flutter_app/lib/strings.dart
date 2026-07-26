@@ -42,6 +42,7 @@ class S {
   static const youAreBarrani = 'إنت البرّاني';
   static const barraniHint = 'ما عندكش كلمة. اسمع مليح و مثّل روحك.';
   static const yourWord = 'كلمتك';
+  static const passLabel = 'الدورة';
   static const turnOf = 'الدور متاع';
   static const asks = 'يسأل';
   static const questionHint =
@@ -64,7 +65,7 @@ class S {
 
   static const caught = 'طلع برّاني!';
   static const missed = 'لا، هذا ما كانش برّاني';
-  static const stealBackPrompt = 'البرّاني ينجم يربح الدورة كان عرف الكلمة';
+  static const stealBackPrompt = 'عندو فرصة وحدة باش يربح الدورة';
   static const guessedRight = 'عرفها';
   static const guessedWrong = 'ما عرفهاش';
   static const secretWordWas = 'الكلمة كانت';

@@ -12,7 +12,10 @@ function roundWith(impostorIds: number[], playerCount: number): Round {
     variant: "barrani",
     assignments,
     startingPlayer: 0,
-    questionTargets: assignments.map((_, i) => (i + 1) % playerCount),
+    questionTargets: [
+      assignments.map((_, i) => (i + 1) % playerCount),
+      assignments.map((_, i) => (i + 1) % playerCount),
+    ],
   };
 }
 

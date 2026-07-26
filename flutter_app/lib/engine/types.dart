@@ -41,8 +41,8 @@ class Round {
   final List<Assignment> assignments;
   final PlayerId startingPlayer;
 
-  /// questionTargets[asker] = the player that asker must question.
-  final List<PlayerId> questionTargets;
+  /// questionTargets[pass][asker] = the player that asker must question.
+  final List<List<PlayerId>> questionTargets;
 
   const Round({
     required this.pair,

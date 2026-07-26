@@ -1,5 +1,6 @@
 import { allPacks } from "../content";
 import { buildPool, recyclePool } from "../engine/pairPool";
+import { QUESTION_PASSES } from "../engine/questions";
 import { createRng } from "../engine/rng";
 import { isImpostor, MAX_PLAYERS, MIN_PLAYERS } from "../engine/roles";
 import { canStart, createRound, maxImpostorCount, resolveVariant } from "../engine/round";
@@ -47,8 +48,8 @@ export function currentAsker(session: Session): PlayerId | null {
 /** Who the current asker must question, chosen by the engine at deal time. */
 export function currentTarget(session: Session): PlayerId | null {
   const asker = currentAsker(session);
-  if (asker === null || !session.round) return null;
-  return session.round.questionTargets[asker] ?? null;
+  if (asker === null || session.phase.name !== "questions" || !session.round) return null;
+  return session.round.questionTargets[session.phase.pass]?.[asker] ?? null;
 }
 
 /** Deals a round from the current settings. Rebuilds the pool if packs changed. */
@@ -161,14 +162,20 @@ export function reducer(session: Session, action: Action): Session {
       if (next < session.players.length) {
         return { ...session, phase: { name: "handoff", index: next } };
       }
-      return { ...session, phase: { name: "questions", offset: 0 } };
+      return { ...session, phase: { name: "questions", pass: 0, offset: 0 } };
     }
 
     case "nextQuestion": {
       if (phase.name !== "questions") return session;
-      const next = phase.offset + 1;
-      if (next < session.players.length) {
-        return { ...session, phase: { name: "questions", offset: next } };
+
+      const nextOffset = phase.offset + 1;
+      if (nextOffset < session.players.length) {
+        return { ...session, phase: { ...phase, offset: nextOffset } };
+      }
+
+      const nextPass = phase.pass + 1;
+      if (nextPass < QUESTION_PASSES) {
+        return { ...session, phase: { name: "questions", pass: nextPass, offset: 0 } };
       }
       return { ...session, phase: { name: "discussion" } };
     }
