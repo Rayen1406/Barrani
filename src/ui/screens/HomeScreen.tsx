@@ -2,6 +2,7 @@ import { canStart } from "../../engine/round";
 import { useDispatch, useSession } from "../../state/SessionContext";
 import { strings } from "../../strings";
 import { Button } from "../components/Button";
+import logo from "../../assets/logo.webp";
 
 export function HomeScreen() {
   const session = useSession();
@@ -11,7 +12,9 @@ export function HomeScreen() {
 
   return (
     <section className="screen screen--home">
-      <h1>{strings.appName}</h1>
+      <h1>
+        <img className="logo" src={logo} alt={strings.appName} />
+      </h1>
       <p className="dim">{strings.tagline}</p>
 
       <Button disabled={!ready || !hasPacks} onClick={() => dispatch({ type: "startRound" })}>

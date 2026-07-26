@@ -1,19 +1,20 @@
 :root {
-  /* Regal Navy base — cream text on it clears 10:1, which is what keeps the
-     phone readable at arm's length on a sunny terrace. */
-  --bg: #0d3b66;
-  --surface: #10457a;
-  --surface-raised: #17528d;
-  --border: #2c6699;
+  /* Sampled from the logo: charcoal backdrop, gold, crimson.
+     Cream on this charcoal clears 15:1, which is what keeps the phone
+     readable at arm's length on a sunny terrace. */
+  --bg: #141416;
+  --surface: #1c1c20;
+  --surface-raised: #26262c;
+  --border: #3a3a42;
 
-  --text: #faf0ca; /* Lemon Chiffon */
-  --text-dim: #d5c9a5;
+  --text: #f3ece0;
+  --text-dim: #a09a90;
 
-  --accent: #f4d35e; /* Royal Gold */
-  --accent-text: #0d3b66;
+  --accent: #e3c573; /* logo gold */
+  --accent-text: #121214;
 
-  --secondary: #ee964b; /* Sandy Brown */
-  --danger: #f95738; /* Tomato */
+  --secondary: #e0a34a; /* warm amber, for inline notices */
+  --danger: #f03345; /* logo crimson */
 
   --step-0: 1.125rem;
   --step-1: 1.5rem;
