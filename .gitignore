@@ -4,3 +4,7 @@ android
 .DS_Store
 *.keystore
 .claude
+# Flutter
+flutter_app/build/
+flutter_app/.dart_tool/
+flutter_app/.flutter-plugins-dependencies
