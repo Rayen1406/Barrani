@@ -71,22 +71,33 @@ Press-and-hold rather than tap is deliberate: it makes an accidental reveal
 while the phone is in motion nearly impossible. No back navigation exists during
 this phase.
 
-### Hints and discussion
+### Questioning and discussion
 
-The app picks a random starting player and displays turn order. Each player says
-**one word** out loud about their secret word. Two passes of hints, then open
-discussion.
+The app picks a random starting player, then walks the table. On each turn it
+names an **asker** and a **target it chose**, and that player asks the target a
+trick question about the secret word. The target answers out loud to the whole
+table. One pass around the table, then open discussion.
 
-**Hint passes are untimed** — the app only shows whose turn it is and advances
-on a tap. Rushing someone into a bad hint is not fun.
+Targets are assigned as a **random cycle**, which guarantees two properties a
+plain random pick would not: nobody is ever sent to question themselves, and
+every player is questioned exactly once — so البراني can never slip through a
+round unasked.
+
+**Questioning is untimed** — the app only shows who asks whom and advances on a
+tap. Rushing someone into a bad question is not fun.
+
+One pass, not two: a question-and-answer exchange carries far more information
+than a one-word hint, and two passes would push a round past the five-minute
+acceptance target.
 
 **The discussion phase is timed.** Default 3 minutes, host-adjustable at setup
 to 1, 2, 3, or 5 minutes, or off entirely. This is the timer that requires
 `keep-awake`.
 
-**The app deliberately does not capture what anyone says.** The talking,
-accusing and laughing stays entirely off-app. The app is a dealer and a referee,
-nothing more.
+**The app deliberately does not capture what anyone says.** It never supplies
+the question either — inventing the trick question is the skill the game is
+actually testing. The talking, accusing and laughing stays entirely off-app. The
+app is a dealer and a referee, nothing more.
 
 ### Vote and resolution
 

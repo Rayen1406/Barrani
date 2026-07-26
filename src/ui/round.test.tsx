@@ -51,7 +51,7 @@ function reachVote(): string {
   setup();
   click(strings.start);
   const impostor = revealAll();
-  for (let i = 0; i < NAMES.length * 2; i++) click(strings.saidIt);
+  for (let i = 0; i < NAMES.length; i++) click(strings.asked);
   click(strings.startVote);
   return impostor;
 }
@@ -110,19 +110,51 @@ test("exactly one of four players sees the barrani badge", () => {
   expect(barraniCount).toBe(1);
 });
 
-test("after every reveal, hints begin", () => {
+test("after every reveal, questioning begins with a named asker and target", () => {
   setup();
   click(strings.start);
   revealAll();
-  expect(screen.getByText(strings.hintsTitle)).toBeInTheDocument();
-  expect(screen.getByRole("button", { name: strings.saidIt })).toBeInTheDocument();
+
+  expect(screen.getByText(strings.asks)).toBeInTheDocument();
+  expect(screen.getByText(strings.questionHint)).toBeInTheDocument();
+  expect(screen.getByRole("button", { name: strings.asked })).toBeInTheDocument();
+
+  // Two different players are named on screen: the asker and their target.
+  const named = NAMES.filter((name) => screen.queryByText(name) !== null);
+  expect(named).toHaveLength(2);
+});
+
+test("nobody is ever told to question themselves, and everyone is asked once", () => {
+  setup();
+  click(strings.start);
+  revealAll();
+
+  const askers: string[] = [];
+  const targets: string[] = [];
+
+  for (let i = 0; i < NAMES.length; i++) {
+    const names = [...document.querySelectorAll(".ask__name")].map((el) => el.textContent ?? "");
+    const target = document.querySelector(".ask__name--target")?.textContent ?? "";
+    const asker = names.find((name) => name !== target) ?? "";
+
+    expect(asker).not.toBe("");
+    expect(target).not.toBe("");
+    expect(asker).not.toBe(target);
+
+    askers.push(asker);
+    targets.push(target);
+    click(strings.asked);
+  }
+
+  expect([...askers].sort()).toEqual([...NAMES].sort());
+  expect([...targets].sort()).toEqual([...NAMES].sort());
 });
 
 test("with no timer configured, discussion offers the vote button and no clock", () => {
   setup(null);
   click(strings.start);
   revealAll();
-  for (let i = 0; i < NAMES.length * 2; i++) click(strings.saidIt);
+  for (let i = 0; i < NAMES.length; i++) click(strings.asked);
   expect(screen.queryByRole("timer")).not.toBeInTheDocument();
   expect(screen.getByRole("button", { name: strings.startVote })).toBeInTheDocument();
 });
@@ -131,7 +163,7 @@ test("the discussion timer appears and counts when one is configured", () => {
   setup(60);
   click(strings.start);
   revealAll();
-  for (let i = 0; i < NAMES.length * 2; i++) click(strings.saidIt);
+  for (let i = 0; i < NAMES.length; i++) click(strings.asked);
   expect(screen.getByRole("timer")).toHaveTextContent("1:00");
 });
 

@@ -62,7 +62,13 @@ test("the impostor is not always player 0", () => {
 
 test("isImpostor reads the round correctly", () => {
   const assignments = assignRoles(config(5, 1, "barrani"), pair, createRng(5));
-  const round: Round = { pair, variant: "barrani", assignments, startingPlayer: 0 };
+  const round: Round = {
+    pair,
+    variant: "barrani",
+    assignments,
+    startingPlayer: 0,
+    questionTargets: [1, 2, 3, 4, 0],
+  };
   const impostorId = assignments.find((a) => a.isImpostor)!.playerId;
   expect(isImpostor(round, impostorId)).toBe(true);
   expect(isImpostor(round, assignments.find((a) => !a.isImpostor)!.playerId)).toBe(false);

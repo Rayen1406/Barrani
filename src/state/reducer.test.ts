@@ -1,5 +1,5 @@
 import { defaultSettings } from "../persist/schema";
-import { createSession, currentHintPlayer, reducer } from "./reducer";
+import { createSession, currentAsker, currentTarget, reducer } from "./reducer";
 import type { Action, Session } from "./types";
 
 function sessionWith(playerCount: number): Session {
@@ -22,7 +22,7 @@ function revealEveryone(session: Session): Session {
 
 function reachVote(playerCount: number): Session {
   let session = revealEveryone(reducer(sessionWith(playerCount), { type: "startRound" }));
-  for (let i = 0; i < playerCount * 2; i++) session = reducer(session, { type: "nextHint" });
+  for (let i = 0; i < playerCount; i++) session = reducer(session, { type: "nextQuestion" });
   return reducer(session, { type: "endDiscussion" });
 }
 
@@ -79,9 +79,9 @@ test("reveal then nextPlayer walks every seat before hints begin", () => {
   expect(session.phase).toEqual({ name: "handoff", index: 1 });
 });
 
-test("after the last seat reveals, hints start at pass one offset zero", () => {
+test("after the last seat reveals, questioning starts at offset zero", () => {
   const session = revealEveryone(reducer(sessionWith(4), { type: "startRound" }));
-  expect(session.phase).toEqual({ name: "hints", pass: 1, offset: 0 });
+  expect(session.phase).toEqual({ name: "questions", offset: 0 });
 });
 
 test("a reveal cannot be skipped — nextPlayer during handoff is a no-op", () => {
@@ -97,19 +97,33 @@ test("the vote is unreachable before every player has revealed", () => {
   expect(reducer(session, { type: "endDiscussion" })).toBe(session);
 });
 
-test("hints run two passes around the table then open discussion", () => {
+test("questioning goes once around the table then opens discussion", () => {
   let session = revealEveryone(reducer(sessionWith(3), { type: "startRound" }));
-  for (let i = 0; i < 3; i++) session = reducer(session, { type: "nextHint" });
-  expect(session.phase).toEqual({ name: "hints", pass: 2, offset: 0 });
-  for (let i = 0; i < 3; i++) session = reducer(session, { type: "nextHint" });
+  for (let i = 0; i < 2; i++) session = reducer(session, { type: "nextQuestion" });
+  expect(session.phase).toEqual({ name: "questions", offset: 2 });
+  session = reducer(session, { type: "nextQuestion" });
   expect(session.phase).toEqual({ name: "discussion" });
 });
 
-test("the hint turn walks the table starting from the round's starting player", () => {
+test("the asking turn walks the table starting from the round's starting player", () => {
   const session = revealEveryone(reducer(sessionWith(4), { type: "startRound" }));
-  expect(currentHintPlayer(session)).toBe(session.round!.startingPlayer);
-  const next = reducer(session, { type: "nextHint" });
-  expect(currentHintPlayer(next)).toBe((session.round!.startingPlayer + 1) % 4);
+  expect(currentAsker(session)).toBe(session.round!.startingPlayer);
+  const next = reducer(session, { type: "nextQuestion" });
+  expect(currentAsker(next)).toBe((session.round!.startingPlayer + 1) % 4);
+});
+
+test("every asker gets a target, and never themselves", () => {
+  let session = revealEveryone(reducer(sessionWith(5), { type: "startRound" }));
+  const seen: number[] = [];
+  for (let i = 0; i < 5; i++) {
+    const asker = currentAsker(session);
+    const target = currentTarget(session);
+    expect(target).not.toBeNull();
+    expect(target).not.toBe(asker);
+    seen.push(target!);
+    session = reducer(session, { type: "nextQuestion" });
+  }
+  expect([...seen].sort((a, b) => a - b)).toEqual([0, 1, 2, 3, 4]);
 });
 
 test("voting out an impostor opens a pending steal-back", () => {
@@ -195,7 +209,7 @@ test("unknown-for-this-phase actions never throw and never change identity", () 
   const noops: Action[] = [
     { type: "revealCard" },
     { type: "nextPlayer" },
-    { type: "nextHint" },
+    { type: "nextQuestion" },
     { type: "endDiscussion" },
     { type: "castVote", accused: 0 },
     { type: "resolveStealBack", correct: true },

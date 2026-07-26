@@ -1,4 +1,5 @@
 import { drawPair, type PairPool } from "./pairPool";
+import { assignQuestionTargets } from "./questions";
 import { assignRoles, MAX_PLAYERS, MIN_PLAYERS } from "./roles";
 import { pickIndex, type Rng } from "./rng";
 import type { Round, RoundConfig, Variant, VariantSetting } from "./types";
@@ -36,6 +37,7 @@ export function createRound(config: RoundConfig, pool: PairPool, rng: Rng): Crea
     variant: config.variant,
     assignments: assignRoles(config, draw.pair, rng),
     startingPlayer: pickIndex(config.playerCount, rng),
+    questionTargets: assignQuestionTargets(config.playerCount, rng),
   };
 
   return { kind: "ok", round, pool: draw.pool };

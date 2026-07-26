@@ -36,11 +36,19 @@ export function createSession(settings: PersistedSettings, seed: number): Sessio
   };
 }
 
-export function currentHintPlayer(session: Session): PlayerId | null {
-  if (session.phase.name !== "hints" || !session.round) return null;
+/** Whose turn it is to ask, walking the table from the round's starting player. */
+export function currentAsker(session: Session): PlayerId | null {
+  if (session.phase.name !== "questions" || !session.round) return null;
   const count = session.players.length;
   if (count === 0) return null;
   return (session.round.startingPlayer + session.phase.offset) % count;
+}
+
+/** Who the current asker must question, chosen by the engine at deal time. */
+export function currentTarget(session: Session): PlayerId | null {
+  const asker = currentAsker(session);
+  if (asker === null || !session.round) return null;
+  return session.round.questionTargets[asker] ?? null;
 }
 
 /** Deals a round from the current settings. Rebuilds the pool if packs changed. */
@@ -153,17 +161,14 @@ export function reducer(session: Session, action: Action): Session {
       if (next < session.players.length) {
         return { ...session, phase: { name: "handoff", index: next } };
       }
-      return { ...session, phase: { name: "hints", pass: 1, offset: 0 } };
+      return { ...session, phase: { name: "questions", offset: 0 } };
     }
 
-    case "nextHint": {
-      if (phase.name !== "hints") return session;
+    case "nextQuestion": {
+      if (phase.name !== "questions") return session;
       const next = phase.offset + 1;
       if (next < session.players.length) {
-        return { ...session, phase: { ...phase, offset: next } };
-      }
-      if (phase.pass === 1) {
-        return { ...session, phase: { name: "hints", pass: 2, offset: 0 } };
+        return { ...session, phase: { name: "questions", offset: next } };
       }
       return { ...session, phase: { name: "discussion" } };
     }

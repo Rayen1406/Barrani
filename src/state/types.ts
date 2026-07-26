@@ -13,7 +13,7 @@ export type Phase =
   | { name: "handoff"; index: number }
   | { name: "reveal"; index: number }
   /** offset is a step from round.startingPlayer, 0..playerCount-1 */
-  | { name: "hints"; pass: 1 | 2; offset: number }
+  | { name: "questions"; offset: number }
   | { name: "discussion" }
   | { name: "vote" }
   | {
@@ -61,7 +61,7 @@ export type Action =
   | { type: "recyclePool" }
   | { type: "revealCard" }
   | { type: "nextPlayer" }
-  | { type: "nextHint" }
+  | { type: "nextQuestion" }
   | { type: "endDiscussion" }
   | { type: "castVote"; accused: PlayerId }
   | { type: "resolveStealBack"; correct: boolean }

@@ -1,7 +1,7 @@
 import { useSession } from "../state/SessionContext";
 import { DiscussionScreen } from "./screens/DiscussionScreen";
 import { HandoffScreen } from "./screens/HandoffScreen";
-import { HintsScreen } from "./screens/HintsScreen";
+import { QuestionsScreen } from "./screens/QuestionsScreen";
 import { ResolutionScreen } from "./screens/ResolutionScreen";
 import { RevealScreen } from "./screens/RevealScreen";
 import { ScoreboardScreen } from "./screens/ScoreboardScreen";
@@ -16,8 +16,8 @@ export function RoundView() {
       return <HandoffScreen index={phase.index} />;
     case "reveal":
       return <RevealScreen index={phase.index} />;
-    case "hints":
-      return <HintsScreen pass={phase.pass} />;
+    case "questions":
+      return <QuestionsScreen />;
     case "discussion":
       return <DiscussionScreen />;
     case "vote":
