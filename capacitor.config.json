@@ -1,0 +1,8 @@
+{
+  "appId": "com.rayen.barrani",
+  "appName": "برّاني",
+  "webDir": "dist",
+  "android": {
+    "allowMixedContent": false
+  }
+}
